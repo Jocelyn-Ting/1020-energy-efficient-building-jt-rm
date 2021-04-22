@@ -13,7 +13,7 @@ class Cooler:
         self.cp_air = 1004 #kJ kg^-1 K^-1 
         self.cv_air = 717 #kJ kg^-1 K^-1
         
-    def getHeating(self,t,T):
+    def getCooling(self,t,T):
         # Input is a given timestamp t, and vector of room temperatures T
         # Output should be TC, the temperature setpoint for the cooler,
         # and fC, a vector of flows to each room. The sum of flows fC
