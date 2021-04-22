@@ -3,7 +3,7 @@ class Building:
     #BUILDING Models the thermodynamics of a building
     #   Includes a list of Room objects, Heater, and Cooler
     
-    def _init_(self,L,W):
+    def __init__(self,L,W):
         self.rooms=[] # List of room objects
         self.heater # Heater object
         self.cooler # Cooler object
@@ -24,6 +24,7 @@ class Building:
         for roomidx in range(0,length(self.rooms)):
             room = self.rooms[roomidx]
             dTdt[roomidx] = room.dTdt(self.t,self.T)
+        return dTdt
 
     def addRoom(self,ID,TRange,L,W):
         newRoom = Room(ID,TRange,L,W,obj)
