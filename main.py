@@ -1,5 +1,7 @@
 import numpy as np
 import scipy
+from Building import *
+
 #Main function for Project 3
 #Some constants for your convenience
 # Properties of air

@@ -1,4 +1,5 @@
-import csv
+import pandas as pd
+import numpy as np
 
 class Outside:
     #Outside Simple class to store outside temperatures and other data

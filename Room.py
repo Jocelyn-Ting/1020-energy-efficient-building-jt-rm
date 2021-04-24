@@ -1,7 +1,7 @@
 class Room:
     #ROOM class for thermodynamic simulation
 
-    def __init__(ID,T_range,L,W,building):
+    def __init__(self, ID,T_range,L,W,building):
         #defining constants
         self.rho_air = 1.23 #kg m^-3
         self.cp_air = 1004 #J kg^-1 K^-1 

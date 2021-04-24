@@ -5,8 +5,8 @@ class Building:
     
     def __init__(self,L,W):
         self.rooms=[] # List of room objects
-        self.heater # Heater object
-        self.cooler # Cooler object
+        self.heater=None # Heater object
+        self.cooler=None # Cooler object
         self.L =L
         self.W=W
         self.t =1 #Current time stamp (days)
