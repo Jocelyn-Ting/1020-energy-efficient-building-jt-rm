@@ -1,4 +1,9 @@
 import numpy as np
+from Outside import Outside
+from Ground import Ground
+from Room import Room
+from Heater import Heater
+from Cooler import Cooler
 class Building:
     #BUILDING Models the thermodynamics of a building
     #   Includes a list of Room objects, Heater, and Cooler
@@ -27,7 +32,7 @@ class Building:
         return dTdt
 
     def addRoom(self,ID,TRange,L,W):
-        newRoom = Room(ID,TRange,L,W,obj)
+        newRoom = Room(ID,TRange,L,W,self)
         self.rooms = np.concatenate((self.rooms,newRoom), axis=0)
     
     def addHeater(self,Trange,fMax,building):

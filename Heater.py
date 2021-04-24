@@ -1,7 +1,7 @@
 class Heater:
     # HEATER class models a heater with temperature set-pt and flows    
  
-    def __init__(self, sTrange,fmax,building):
+    def __init__(self, Trange,fmax,building):
         # Creates the cooler object, initializes everything
         self.Trange = Trange #operating temperature range (K)
         self.fmax = fmax # maximum total flow rate (m^3/sec)

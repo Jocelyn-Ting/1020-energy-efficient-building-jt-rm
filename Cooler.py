@@ -2,7 +2,7 @@ import numpy as np
 class Cooler:
     #Cooler class models an AC with temperature set-pt and flows
 
-    def _init_(self,Trange,fmax,building):
+    def __init__(self,Trange,fmax,building):
         # Creates the cooler object, initializes everything
         self.Trange = Trange #operating temperature range (K)
         self.fmax = fmax # maximum total flow rate (m^3/sec)

@@ -10,7 +10,7 @@ class Outside:
     #   Outside.T gives the air temperature at the current time stamp,
     #   Outside.T_sky gives sky temperature at current time stamp
     #   Outside.S gives solar radiation levels at current time stamp  
-    def __init__(self,T, T_sky, S):
+    def __init__(self):
         self.weather_data = pd.read_csv('cambridge_weather.csv')
         
     @property    

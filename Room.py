@@ -8,7 +8,7 @@ class Room:
         self.cv_air = 717 #J kg^-1 K^-1
         self.a = 0.9 #absorptivity of room
         self.e = 0.9 #emissivity of room 
-        self.sb = 5.67 * 10^-8 #stefan boltzmann constant
+        self.sb = 5.67 * 10**-8 #stefan boltzmann constant
 
         self.ID = ID
         self.T_range = T_range
@@ -19,11 +19,11 @@ class Room:
         self.cooler = building.cooler
 
 #how to fit in these as well? do you have to say = undefined?
-        self.T # Current temperature
+        self.T=None # Current temperature
         self.H=3 # Height (m)
         self.walls = [] # List of structs: [otherside, area, R_eff]
-        self.floor # struct: [ground, area, R]
-        self.roof # struct: [outside, area, R]
+        self.floor=None # struct: [ground, area, R]
+        self.roof=None # struct: [outside, area, R]
 
     @property
     def V(self):

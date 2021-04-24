@@ -13,6 +13,3 @@ class Ground:
     def T(self,t):
         T=np.interp(t,self.weather_data.iloc[:,0],CtoK(weather_data.iloc[:,4]))
         return T
-
-    def printWeather(self):
-        print(self.weather_data)
