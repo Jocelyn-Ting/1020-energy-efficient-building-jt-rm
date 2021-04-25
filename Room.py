@@ -1,3 +1,4 @@
+from Outside import Outside
 class Room:
     #ROOM class for thermodynamic simulation
 
@@ -32,7 +33,7 @@ class Room:
     @property
     def SA(self):
         # Computes surface area of the room
-        SA = sum([self.walls.area]) + self.floor.area + self.roof.area
+        SA = sum([self.walls.area]) + self.floor['area'] + self.roof['area']
         
     def dTdt(self,t,T): # Computers overall dTdt for the room
         dQdt_cc = self.getCC(t,T) # Gets conductive/convective heat transfer amt
@@ -48,19 +49,19 @@ class Room:
 
     def getCC(self,t,T):
         dQdt_cc = 0 
-        roomTemp = T(self.ID)
-        for wallidx in range(0,length(self.walls)):
-            wall = self.walls(wallidx)
-            if isinstance(wall.otherside,'Outside'): #need to replace isinstance function with pythonic fxn
-                outsideT = wall.otherside.T(t)
-                dQdt_cc = dQdt_cc + (wall.area * (outsideT - roomTemp)/wall.R)
-            elif isinstance(wall.otherside,'Room'):
-                otherRoomT = T(wall.otherside.ID)
-                dQdt_cc = dQdt_cc + (wall.area * (otherRoomT - roomTemp)/wall.R)
+        roomTemp = T[self.ID]
+        for wallidx in range(0,len(self.walls)):
+            wall = self.walls[wallidx]
+            if isinstance(wall['otherside'],Outside): #need to replace isinstance function with pythonic fxn
+                outsideT = wall['otherside'].T(t)
+                dQdt_cc = dQdt_cc + (wall['area'] * (outsideT - roomTemp)/wall['R'])
+            elif isinstance(wall['otherside'],Room):
+                otherRoomT = T[wall['otherside'].ID]
+                dQdt_cc = dQdt_cc + (wall['area'] * (otherRoomT - roomTemp)/wall['R'])
             
         
-        dQdt_cc = dQdt_cc + self.roof.area*(self.roof.outside.T(t) - roomTemp)/self.roof.R
-        dQdt_cc = dQdt_cc + self.floor.area*(self.floor.ground.T(t) - roomTemp)/self.floor.R
+        dQdt_cc = dQdt_cc + self.roof['area']*(self.roof['outside'].T(t) - roomTemp)/self.roof['R']
+        dQdt_cc = dQdt_cc + self.floor['area']*(self.floor['ground'].T(t) - roomTemp)/self.floor['R']
         return dQdt_cc
 
     def getInternal(self,t):
@@ -75,32 +76,32 @@ class Room:
     
     def getLWRadiation(self,t,T):
         dQdt_LW_rad = 0
-        roomTemp = T(self.ID)
-        for wallidx in range(0,length(self.walls)):
+        roomTemp = T[self.ID]
+        for wallidx in range(0,len(self.walls)):
             wall = self.walls(wallidx)
-            if isinstance(wall.otherside,'Outside'):
-                outside = wall.otherside
-                dQdt_LW_rad = dQdt_LW_rad + wall.area*self.sb*(-self.e*(roomTemp**4) \
+            if isinstance(wall['otherside'],Outside):
+                outside = wall['otherside']
+                dQdt_LW_rad = dQdt_LW_rad + wall['area']*self.sb*(-self.e*(roomTemp**4) \
                     + self.a*(outside.T_sky(t)**4))
-            elif isinstance(wall.otherside,'Room'):
-                otherRoom = wall.otherside
-                otherRoomT = T(otherRoom.ID)
-                dQdt_LW_rad = dQdt_LW_rad + wall.area*self.sb*(-self.e*(roomTemp**4) \
+            elif isinstance(wall['otherside'],Room):
+                otherRoom = wall['otherside']
+                otherRoomT = T[otherRoom.ID]
+                dQdt_LW_rad = dQdt_LW_rad + wall['area']*self.sb*(-self.e*(roomTemp**4) \
                     + self.a*(otherRoomT**4))
         
-        dQdt_LW_rad = dQdt_LW_rad +self.roof.area*self.sb*(-self.e*(roomTemp**4)\
-            + self.a*(self.roof.outside.T_sky(t)**4))
-        dQdt_LW_rad = dQdt_LW_rad +self.floor.area*self.sb*(-self.e*(roomTemp**4)\
-            + self.a*(self.floor.ground.T(t)**4))
+        dQdt_LW_rad = dQdt_LW_rad +self.roof['area']*self.sb*(-self.e*(roomTemp**4)\
+            + self.a*(self.roof['outside'].T_sky(t)**4))
+        dQdt_LW_rad = dQdt_LW_rad +self.floor['area']*self.sb*(-self.e*(roomTemp**4)\
+            + self.a*(self.floor['ground'].T(t)**4))
         return dQdt_LW_rad
     
     def getSWRadiation(self,t):
-        dQdt_SW_rad = self.roof.area*self.a*self.roof.outside.S(t)
+        dQdt_SW_rad = self.roof['area']*self.a*self.roof['outside'].S(t)
         return dQdt_SW_rad
     
     def addWall(self,otherside,A_wall,R_eff):
         newWall = {'otherside': otherside,'area':A_wall,'R':R_eff}
-        self.walls = self.walls.append(newWall)
+        self.walls.append(newWall)
     
     def addFloor(self,ground,A_floor,R_eff):
         self.floor = {'ground':ground,'area':A_floor,'R':R_eff}
@@ -111,7 +112,7 @@ class Room:
     def getHeating(self,t,T):
         # Gets the heater's output for time t, converts it
         # into units of energy/time
-        roomTemp = T(self.ID)
+        roomTemp = T[self.ID]
         [TH,fH] = self.heater.getHeating(t,T)
         deltaT = TH - roomTemp
         roomFlow = fH(self.ID)
@@ -119,7 +120,7 @@ class Room:
         return dQdt_heater
     
     def getCooling(self,t,T):
-        roomTemp = T(self.ID)
+        roomTemp = T[self.ID]
         [TC,fC] = self.cooler.getCooling(t,T)
         deltaT = TC - roomTemp
         roomFlow = fC(self.ID)

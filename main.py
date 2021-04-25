@@ -36,7 +36,7 @@ RSI_exterior_wall = .05*RSI_drywall+.3*RSI_fiberglass+.15*RSI_concrete
 RSI_roofing = 0.05*RSI_drywall+0.3*RSI_fiberglass+RSI_wood_roof
 
 # inline function for parallel Reff
-r_par = lambda A,R: 1/(sum(np.divide(A,R))/sum(A)) #note: A and R must be np arrays
+r_par = lambda A,R: 1/(sum(np.divide(np.array(A),np.array(R)))/sum(np.array(A))) #note: A and R must be np arrays
 ## Creating the building
 L = 17 #length of building, replace w/ your own value
 W = 13 #width of building

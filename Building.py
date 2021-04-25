@@ -1,4 +1,5 @@
 import numpy as np
+from scipy import integrate
 from Outside import Outside
 from Ground import Ground
 from Room import Room
@@ -21,19 +22,22 @@ class Building:
 
     @property
     def T(self):
-        return [self.rooms.T]
+        return [room.T for room in self.rooms]
         #^i bet this is where a bug will happen. not sure if will work
     
     def dTdt(self,t,T):
-        dTdt = np.zeros(7,0)
-        for roomidx in range(0,length(self.rooms)):
+        dTdt = []
+        for roomidx in range(0,len(self.rooms)):
             room = self.rooms[roomidx]
-            dTdt[roomidx] = room.dTdt(self.t,self.T)
+            roomdTdt = room.dTdt(self.t,self.T)
+            dTdt.append[roomdTdt]
+            print(dTdt)
         return dTdt
 
     def addRoom(self,ID,TRange,L,W):
         newRoom = Room(ID,TRange,L,W,self)
-        self.rooms = np.concatenate((self.rooms,newRoom), axis=0)
+        self.rooms.append(newRoom)
+        print(self.rooms)
     
     def addHeater(self,Trange,fMax,building):
         self.heater = Heater(Trange,fMax,building)
@@ -45,22 +49,22 @@ class Building:
         #Adds a wall between two rooms, with surface area of the wall
         #equal to A_w, and the effective resistance of the wall as
         #R_eff
-        room1 = self.rooms([self.rooms.ID] == room1ID)
-        room2 = self.rooms([self.rooms.ID] == room2ID)
+        room1 = next((room for room in self.rooms if room.ID == room1ID),None)
+        room2 = next((room for room in self.rooms if room.ID == room2ID),None)
         room1.addWall(room2,A_w,R_eff)
         room2.addWall(room1,A_w,R_eff)
     
     def addExteriorWall(self,roomID,A_w,R_eff):
         #Adds a wall separating outside from inside
-        room = self.rooms([self.rooms.ID]==roomID)
+        room = next((room for room in self.rooms if room.ID == roomID),None)
         room.addWall(self.outside,A_w,R_eff)
     
     def addRoof(self,roomID,A_r,R_eff):
-        room = self.rooms([self.rooms.ID]==roomID)
+        room = next((room for room in self.rooms if room.ID == roomID),None)
         room.addRoof(self.outside,A_r,R_eff)
     
     def addFloor(self,roomID,A_f,R_eff):
-        room = self.rooms([self.rooms.ID]==roomID)
+        room = next((room for room in self.rooms if room.ID == roomID),None)
         room.addFloor(self.ground,A_f,R_eff)
     
 
