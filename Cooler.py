@@ -24,10 +24,10 @@ class Cooler:
         #  - outside air: self.outside.T(t)
         #  - sky: self.outside.T_sky(t)
         #  - ground: self.ground.T(t)
-        TC = 5 # 5 is random. Replace w/ your control logic for setting TC
+        TC = 285 # 300 is random. Replace w/ your control logic for setting TC
         fC = [0,0,0,0,0,0,0] # Replace w/ your control logic for setting flows
-        assert TC <= max(self.Trange) and TC>=min(self.Trange,\
-            'Temperature set point must fall within THrange') #checks that TC is in the proper range
+        assert TC <= max(self.Trange) and TC>=min(self.Trange),\
+            'Temperature set point must fall within THrange' #checks that TC is in the proper range
 
         assert len(fC) == 7, 'flows must be equal to number of rooms (7)' #checks that fC is the right size
         

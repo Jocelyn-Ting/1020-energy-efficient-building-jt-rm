@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+from CtoK import CtoK
 class Ground:
     #GROUND Simple class to store the ground temperature
     #   Reads data from cambridge_weather.csv to when initialized. Like the
@@ -9,7 +9,7 @@ class Ground:
     #   which depends on the current time of the Ground object.   
     def __init__(self):
         self.weather_data = pd.read_csv('cambridge_weather.csv')
-    @property
+
     def T(self,t):
-        T=np.interp(t,self.weather_data.iloc[:,0],CtoK(weather_data.iloc[:,4]))
+        T=np.interp(t,self.weather_data.iloc[:,0],CtoK(self.weather_data.iloc[:,4]))
         return T

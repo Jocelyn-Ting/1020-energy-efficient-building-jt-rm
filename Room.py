@@ -1,4 +1,6 @@
 from Outside import Outside
+from CtoK import CtoK
+from isWorkHours import isWorkHours
 class Room:
     #ROOM class for thermodynamic simulation
 
@@ -20,20 +22,19 @@ class Room:
         self.cooler = building.cooler
 
 #how to fit in these as well? do you have to say = undefined?
-        self.T=None # Current temperature
+        self.T=295 # Current temperature. Lil sktchy defined as 295 = initial temp in ode run
         self.H=3 # Height (m)
         self.walls = [] # List of structs: [otherside, area, R_eff]
         self.floor=None # struct: [ground, area, R]
         self.roof=None # struct: [outside, area, R]
-
     @property
     def V(self):
         # Computes volume of the room
-        V = self.L*self.W*self.H
+        return self.L*self.W*self.H
     @property
     def SA(self):
         # Computes surface area of the room
-        SA = sum([self.walls.area]) + self.floor['area'] + self.roof['area']
+        return sum([self.walls.area]) + self.floor['area'] + self.roof['area']
         
     def dTdt(self,t,T): # Computers overall dTdt for the room
         dQdt_cc = self.getCC(t,T) # Gets conductive/convective heat transfer amt
@@ -42,9 +43,7 @@ class Room:
         dQdt_internal = self.getInternal(t) # gets internal heat generation rate
         dQdt_heater = self.getHeating(t,T) #gets the heating amount for this room
         dQdt_cooler = self.getCooling(t,T) #gets the cooling amount for this room
-        dTdt = (24*3600/(self.rho_air * self.cv_air * self.V)) * \
-            (dQdt_cc + dQdt_LW_rad + dQdt_SW_rad + dQdt_internal \
-            + dQdt_heater + dQdt_cooler)
+        dTdt = (24*3600/(self.rho_air*self.cv_air*self.V))*(dQdt_cc + dQdt_LW_rad + dQdt_SW_rad + dQdt_internal + dQdt_heater + dQdt_cooler)
         return dTdt
 
     def getCC(self,t,T):
@@ -52,7 +51,7 @@ class Room:
         roomTemp = T[self.ID]
         for wallidx in range(0,len(self.walls)):
             wall = self.walls[wallidx]
-            if isinstance(wall['otherside'],Outside): #need to replace isinstance function with pythonic fxn
+            if isinstance(wall['otherside'],Outside): 
                 outsideT = wall['otherside'].T(t)
                 dQdt_cc = dQdt_cc + (wall['area'] * (outsideT - roomTemp)/wall['R'])
             elif isinstance(wall['otherside'],Room):
@@ -78,7 +77,7 @@ class Room:
         dQdt_LW_rad = 0
         roomTemp = T[self.ID]
         for wallidx in range(0,len(self.walls)):
-            wall = self.walls(wallidx)
+            wall = self.walls[wallidx]
             if isinstance(wall['otherside'],Outside):
                 outside = wall['otherside']
                 dQdt_LW_rad = dQdt_LW_rad + wall['area']*self.sb*(-self.e*(roomTemp**4) \
@@ -115,7 +114,7 @@ class Room:
         roomTemp = T[self.ID]
         [TH,fH] = self.heater.getHeating(t,T)
         deltaT = TH - roomTemp
-        roomFlow = fH(self.ID)
+        roomFlow = fH[self.ID]
         dQdt_heater = self.cp_air * self.rho_air * roomFlow * deltaT
         return dQdt_heater
     
@@ -123,7 +122,7 @@ class Room:
         roomTemp = T[self.ID]
         [TC,fC] = self.cooler.getCooling(t,T)
         deltaT = TC - roomTemp
-        roomFlow = fC(self.ID)
+        roomFlow = fC[self.ID]
         dQdt_cooler = self.cp_air * self.rho_air * roomFlow * deltaT
         return dQdt_cooler
     

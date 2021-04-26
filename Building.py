@@ -19,7 +19,6 @@ class Building:
         self.outside = Outside()
         self.ground = Ground()
         #self.T # vector of temperature of each room at current time step
-
     @property
     def T(self):
         return [room.T for room in self.rooms]
@@ -30,14 +29,12 @@ class Building:
         for roomidx in range(0,len(self.rooms)):
             room = self.rooms[roomidx]
             roomdTdt = room.dTdt(self.t,self.T)
-            dTdt.append[roomdTdt]
-            print(dTdt)
+            dTdt.append(roomdTdt)
         return dTdt
 
     def addRoom(self,ID,TRange,L,W):
         newRoom = Room(ID,TRange,L,W,self)
         self.rooms.append(newRoom)
-        print(self.rooms)
     
     def addHeater(self,Trange,fMax,building):
         self.heater = Heater(Trange,fMax,building)
