@@ -22,7 +22,7 @@ class Room:
         self.cooler = building.cooler
 
 #how to fit in these as well? do you have to say = undefined?
-        self.T=295 # Current temperature. Lil sktchy defined as 295 = initial temp in ode run
+        self.T=None # Current temperature. Lil sktchy defined as 295 = initial temp in ode run
         self.H=3 # Height (m)
         self.walls = [] # List of structs: [otherside, area, R_eff]
         self.floor=None # struct: [ground, area, R]

@@ -28,7 +28,7 @@ class Building:
         dTdt = []
         for roomidx in range(0,len(self.rooms)):
             room = self.rooms[roomidx]
-            roomdTdt = room.dTdt(self.t,self.T)
+            roomdTdt = room.dTdt(t,T)
             dTdt.append(roomdTdt)
         return dTdt
 

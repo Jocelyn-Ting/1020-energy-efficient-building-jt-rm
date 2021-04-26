@@ -118,35 +118,52 @@ T0 = [295,295,295,295,295,295,295]
 ode15s = scipy.integrate.ode(f)
 ode15s.set_integrator('vode',method = "bdf", max_step=0.1,order=15)
 ode15s.set_initial_value(T0,1) #sets initial T value and starts at time=1
-[tRange,T]=ode15s.integrate(10) #integrates until time = 10
+tRange=[1]
+T=[[295,295,295,295,295,295,295]]
+
+#from documentation here: https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.ode.html
+while ode15s.successful() and ode15s.t<=10:
+    T.append(ode15s.integrate(ode15s.t+.1))
+    tRange.append(ode15s.t+.1)
+    print(ode15s.t)
+
+#tRange, T = ode15s.integrate(10)[0], ode15s.integrate(10)[1] #integrates until time = 10
+print(tRange)
+print(T)
 # If you are running into difficulties with ode15s getting stuck, try
 # using, which uses a different solution algorithm, but it runs slower
 #[tRange,T] = ode23s(f,[1 10],T0,ODEOPTS)
 toc = time.time()-tic
-print("simulation finished in " +toc+ "seconds")
+print("simulation finished in " +str(toc)+ "seconds")
 
 ## Plotting
+#plotting inspo : https://matplotlib.org/devdocs/gallery/lines_bars_and_markers/cohere.html#sphx-glr-gallery-lines-bars-and-markers-cohere-py
 import matplotlib.pyplot as plt
+
+plot1 = plt.figure(0)
+
 fig1,ax1=plt.subplots(3)
 ax1[0].plot(tRange,T)
-ax1[0].ylabel('T (K)')
-ax1[0].legend('Room 1','Room 2','Room 3','Room 4','Room 5','Room 6','Room 7')
+ax1[0].set_ylabel('T (K)')
+ax1[0].legend(['Room 1','Room 2','Room 3','Room 4','Room 5','Room 6','Room 7'])
 ax1[1].plot(tRange,building.outside.T(tRange))
 ax1[1].plot(tRange,building.outside.T_sky(tRange))
 ax1[1].plot(tRange,building.ground.T(tRange))
-ax1[1].legend('T_{air}','T_{sky}','T_{ground}')
-ax1[1].ylabel('T (K)')
-ax1[2].xlabel('time (days)')
+ax1[1].legend(['T_air','T_sky','T_ground'])
+ax1[1].set_ylabel('T (K)')
+ax1[2].set_xlabel('time (days)')
 ax1[2].plot(tRange,building.outside.S(tRange))
-ax1[2].ylabel('Solar Radiance (W/m^2)')
+ax1[2].set_ylabel('Solar Radiance (W/m^2)')
 
+plot2 = plt.figure(1)
 fig2,ax2=plt.subplots(7)
 
 for ii in range(0,7):
-    ax2[ii].plot(tRange,T[:,ii])
-    ax2[ii].plot(tRange,Tmin(ii)*ones(size(tRange)))
-    ax2[ii].plot(tRange,Tmax(ii)*ones(size(tRange)))
-    ax2[ii].legend(strcat('Temp room ', str(ii)), 'min', 'max')
+    ax2[ii].plot(tRange,[temps[ii] for temps in T])
+    ax2[ii].plot(tRange,Tmin[ii]*np.ones(len(tRange)))
+    ax2[ii].plot(tRange,Tmax[ii]*np.ones(len(tRange)))
+    ax2[ii].legend(['Temp room '+str(ii), 'min', 'max'])
+plt.show()
 
 # use r_par function to calculate Reff for walls
 # reff13 = r_par([2,16],[RSI_wood_door,RSI_interior_wall])
