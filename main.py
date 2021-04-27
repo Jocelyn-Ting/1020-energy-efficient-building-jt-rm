@@ -44,7 +44,7 @@ Tmin=[294,294,294,294,294,291,290]
 Tmax=[300,300,300,300,300,305,295]
 building = Building(L,W)
 TH_range = [300,320]
-fH_max = 2
+fH_max = 4
 building.addHeater(TH_range,fH_max,building)
 TC_range = [285,295]
 fC_max = 2
@@ -140,7 +140,7 @@ print("simulation finished in " +str(toc)+ "seconds")
 #plotting inspo : https://matplotlib.org/devdocs/gallery/lines_bars_and_markers/cohere.html#sphx-glr-gallery-lines-bars-and-markers-cohere-py
 import matplotlib.pyplot as plt
 
-plot1 = plt.figure(0)
+plot0 = plt.figure(0)
 
 fig1,ax1=plt.subplots(3)
 ax1[0].plot(tRange,T)
@@ -155,7 +155,7 @@ ax1[2].set_xlabel('time (days)')
 ax1[2].plot(tRange,building.outside.S(tRange))
 ax1[2].set_ylabel('Solar Radiance (W/m^2)')
 
-plot2 = plt.figure(1)
+plot1 = plt.figure(1)
 fig2,ax2=plt.subplots(7)
 
 for ii in range(0,7):
