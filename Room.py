@@ -64,9 +64,9 @@ class Room:
         return dQdt_cc
 
     def getInternal(self,t):
-        if self.ID == 7:
+        if self.ID == 6:
             dQdt_internal = 5000
-        elif self.ID == 3 and isWorkHours(t):
+        elif self.ID == 2 and isWorkHours(t):
             dQdt_internal = 2000
         else:
             dQdt_internal = 0

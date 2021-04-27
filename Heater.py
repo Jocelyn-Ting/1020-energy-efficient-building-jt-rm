@@ -29,8 +29,8 @@ class Heater:
         #  - sky: self.outside.T_sky(t)
         #  - ground: self.ground.T(t)
         TH = max(self.Trange) #Replace w/ your control logic for setting TH
-        # fH = [0,0,0,0,0,0,0]
-        fH = self.optHeatingFlows(t,T,.1) # Replace w/ your control logic for setting flows
+        fH = [0,0,0,0,0,0,0]
+        # fH = self.optHeatingFlows(t,T,.1) # Replace w/ your control logic for setting flows
         assert TH <= max(self.Trange) and TH >= min(self.Trange),\
             'Temperature set point must fall within THrange' #checks that TH is in the proper range
 
