@@ -62,25 +62,25 @@ building.addRoom(7,[290,295],4,6)
 
 %% Add walls, roof, floor
 %Add interior walls (between 2 rooms) using: building.addInteriorWall(Room1ID,Room2ID,area,R_eff)
-building.addInteriorWall(1,2,20,RSI_interior_wall);
-building.addInteriorWall(1,3,32,r_par([2,30],[RSI_wood_door,RSI_interior_wall]));
-building.addInteriorWall(2,3,8,r_par([2,6],[RSI_wood_door,RSI_interior_wall]));
-building.addInteriorWall(2,3,24,r_par([2,22],[RSI_wood_door,RSI_interior_wall]));
-building.addInteriorWall(4,3,40,r_par([4,36],[RSI_wood_door,RSI_interior_wall]));
-building.addInteriorWall(5,1,20,r_par([2,18],[RSI_wood_door,RSI_interior_wall]));
-building.addInteriorWall(5,3,8,r_par([2,6],[RSI_wood_door,RSI_interior_wall]));
-building.addInteriorWall(6,3,16,r_par([2,14],[RSI_wood_door,RSI_interior_wall]));
-building.addInteriorWall(7,3,24,r_par([2,22],[RSI_wood_door,RSI_interior_wall]));
+building.addInteriorWall(1,2,15,RSI_interior_wall);
+building.addInteriorWall(1,3,24,r_par([2,22],[RSI_wood_door,RSI_interior_wall]));
+building.addInteriorWall(2,3,6,r_par([2,4],[RSI_wood_door,RSI_interior_wall]));
+building.addInteriorWall(2,4,18,r_par([2,16],[RSI_wood_door,RSI_interior_wall]));
+building.addInteriorWall(4,3,30,r_par([4,26],[RSI_wood_door,RSI_interior_wall]));
+building.addInteriorWall(5,1,15,r_par([2,13],[RSI_wood_door,RSI_interior_wall]));
+building.addInteriorWall(5,3,6,r_par([2,4],[RSI_wood_door,RSI_interior_wall]));
+building.addInteriorWall(6,3,12,r_par([2,10],[RSI_wood_door,RSI_interior_wall]));
+building.addInteriorWall(7,3,18,r_par([2,16],[RSI_wood_door,RSI_interior_wall]));
 
 
 %Add exterior walls (between room and outside) using: building.addExteriorWall(RoomID,area,R_eff)
-building.addExteriorWall(1,32,r_par([4,12,16],[RSI_wood_door, RSI_1p_glass, RSI_exterior_wall]));
-building.addExteriorWall(2,52,r_par([18,34],[RSI_1p_glass,RSI_exterior_wall]));
-building.addExteriorWall(3,48,r_par([24,24],[RSI_1p_glass,RSI_exterior_wall]));
-building.addExteriorWall(4,64,r_par([2,21,41],[RSI_wood_door, RSI_1p_glass, RSI_exterior_wall]));
-building.addExteriorWall(5,44,RSI_exterior_wall);
-building.addExteriorWall(6,32,r_par([2,30],[RSI_wood_door,RSI_exterior_wall]));
-building.addExteriorWall(7,24,RSI_exterior_wall);
+building.addExteriorWall(1,24,r_par([4,8,12],[RSI_wood_door, RSI_1p_glass, RSI_exterior_wall]));
+building.addExteriorWall(2,39,r_par([12,27],[RSI_1p_glass,RSI_exterior_wall]));
+building.addExteriorWall(3,36,r_par([16,20],[RSI_1p_glass,RSI_exterior_wall]));
+building.addExteriorWall(4,48,r_par([2,14,32],[RSI_wood_door, RSI_1p_glass, RSI_exterior_wall]));
+building.addExteriorWall(5,33,RSI_exterior_wall);
+building.addExteriorWall(6,24,r_par([2,22],[RSI_wood_door,RSI_exterior_wall]));
+building.addExteriorWall(7,18,RSI_exterior_wall);
 
 
 %add floor with: building.addFloor(RoomID,area,R_eff)
