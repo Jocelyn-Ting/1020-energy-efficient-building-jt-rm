@@ -130,7 +130,7 @@ T0 = [295,295,295,295,295,295,295]
 # print(tRange)
 
 # trying this https://stackoverflow.com/questions/8741003/how-to-solve-a-stiff-ode-with-python
-solution = scipy.integrate.solve_ivp(f, [1, 10],T0, method='BDF', first_step =0.1, max_step=.1, dense_output=True)
+solution = scipy.integrate.solve_ivp(f, [1, 2],T0, method='BDF', first_step =0.1, min_step=.1, max_step=.1, dense_output=True)
 tRange = solution.t.tolist()
 T=solution.y.tolist()
 
@@ -143,7 +143,7 @@ import matplotlib.pyplot as plt
 
 plot0 = plt.figure(0)
 
-fig1,ax1=plt.subplots(3)
+fig1,ax1=plt.subplots(4)
 # ax1[0].plot(tRange,T)
 for i in range(len(T)):
     ax1[0].plot(tRange,T[i])
@@ -155,10 +155,13 @@ ax1[1].plot(tRange,building.outside.T_sky(tRange))
 ax1[1].plot(tRange,building.ground.T(tRange))
 ax1[1].legend(['T_air','T_sky','T_ground'])
 ax1[1].set_ylabel('T (K)')
-ax1[2].set_xlabel('time (days)')
+# ax1[2].set_xlabel('time (days)')
 ax1[2].plot(tRange,building.outside.S(tRange))
 # ax1[2].plot(np.array(range(10,100))*.1,building.outside.S(np.array(range(10,100))*.1))
 ax1[2].set_ylabel('Solar Radiance (W/m^2)')
+ax1[3].plot(tRange,building.heater.power_used)
+ax1[3].set_xlabel('time (days)')
+ax1[3].set_ylabel('Energy usage rate (kW)')
 
 plot1 = plt.figure(1)
 fig2,ax2=plt.subplots(7)
@@ -169,6 +172,7 @@ for ii in range(0,7):
     ax2[ii].plot(tRange,Tmin[ii]*np.ones(len(tRange)))
     ax2[ii].plot(tRange,Tmax[ii]*np.ones(len(tRange)))
     ax2[ii].legend(['Temp room '+str(ii), 'min', 'max'])
+
 plt.show()
 
 # use r_par function to calculate Reff for walls
