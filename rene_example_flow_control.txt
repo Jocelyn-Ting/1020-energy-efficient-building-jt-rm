@@ -1,0 +1,25 @@
+% %setting max flows
+%             fmax_norm = 4/7;
+%             fmax_3 = 8/7;
+%             fmax_6_7 = 2/7;
+% %             
+% %             %flow will be either linearly dependent on the difference
+% %             %between the threshold and the temperature or 0
+%             f1 = max([0, (295-T(1))*fmax_norm]);
+%             f2 = max([0, (295-T(2))*fmax_norm]);
+%             f3 = max([0, (295-T(3))*fmax_3]);
+%             f4 = max([0, (295-T(4))*fmax_norm]);
+%             f5 = max([0, (295-T(5))*fmax_norm]);
+%             f6 = max([0, (298-T(6))*fmax_6_7]);
+%             f7 = max([0, (291-T(7))*fmax_6_7]);
+% %             
+% %             %ensuring it does not go past the max flow
+%             f1 = f1*(f1 < fmax_norm) + fmax_norm*(f1 >= fmax_norm);
+%             f2 = f2*(f2 < fmax_norm) + fmax_norm*(f2 >= fmax_norm);
+%             f3 = f3*(f3 < fmax_3) + fmax_3*(f3 >= fmax_3);
+%             f4 = f4*(f4 < fmax_norm) + fmax_norm*(f4 >= fmax_norm);
+%             f5 = f5*(f5 < fmax_norm) + fmax_norm*(f5 >= fmax_norm);
+%             f6 = f6*(f6 < fmax_6_7) + fmax_6_7*(f6 >= fmax_6_7);
+%             f7 = f7*(f7 < fmax_6_7) + fmax_6_7*(f7 >= fmax_6_7);
+%             
+%             fH = [f1, f2, f3, f4, f5, f6, f7]*.999; % Replace w/ your control logic for setting flows

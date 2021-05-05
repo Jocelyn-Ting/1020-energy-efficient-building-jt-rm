@@ -35,7 +35,8 @@ classdef Cooler < handle
             %  - sky: obj.outside.T_sky(t)
             %  - ground: obj.ground.T(t)
             TC = min(obj.Trange); % Replace w/ your control logic for setting TC
-            fC = [0,0,0,0,0,0,0]; % Replace w/ your control logic for setting flows
+%             fC = [0,0,0,0,0,0,0]; % Replace w/ your control logic for setting flows
+            fC = obj.simpleCoolingFlows(T);
             if ~(TC <= max(obj.Trange) && TC>=min(obj.Trange)) %checks that TC is in the proper range
                 error('Temperature set point must fall within TCrange')
             end
@@ -45,6 +46,26 @@ classdef Cooler < handle
             if sum(fC) > obj.fmax %checks that flows are within max rate
                 error('sum of flows exceeds maximum flow rate')
             end
+        end
+        function simpleFlows = simpleCoolingFlows(obj,T)
+            rooms=obj.building.rooms;
+            TNeeded = mean(reshape([rooms.T_range],[2,7]))-T.';
+            for i =1:7
+                if TNeeded(i) >0
+                    TNeeded(i)=0;
+                end
+            end
+%             if -sum(TNeeded)<.00001
+%                 simpleFlows=zeros(1, 7);
+%             else
+                %simpleFlows = (obj.last_fH*.2+obj.fmax*TNeeded/sum(TNeeded)*.5);
+                %TNeeded/sum(TNeeded)
+                if -sum(TNeeded)>=1
+                    simpleFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
+                else
+                     simpleFlows = -obj.fmax*TNeeded;
+                end
+%             end
         end
         function p = power(obj,t,T)
             [TC,fC] = obj.getCooling(t,T);

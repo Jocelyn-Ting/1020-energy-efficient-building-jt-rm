@@ -43,7 +43,7 @@ Tmin=[294,294,294,294,294,291,290];
 Tmax=[300,300,300,300,300,305,295];
 building = Building(L,W);
 TH_range = [300,320];
-fH_max = 2;
+fH_max = 4;
 building.addHeater(TH_range,fH_max,building)
 TC_range = [285,295];
 fC_max = 2;
@@ -110,7 +110,7 @@ tic
 f = @(t,T) building.dTdt(t,T);
 T0 = [295;295;295;295;295;295;295];
 ODEOPTS = odeset('MaxStep',0.1);
-[tRange,T] = ode15s(f,[1 10],T0,ODEOPTS);
+[tRange,T] = ode15s(f,[1 365],T0,ODEOPTS);
 % If you are running into difficulties with ode15s getting stuck, try
 % using, which uses a different solution algorithm, but it runs slower
 %[tRange,T] = ode23s(f,[1 10],T0,ODEOPTS);

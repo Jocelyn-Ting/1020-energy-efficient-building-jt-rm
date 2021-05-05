@@ -113,26 +113,26 @@ f = lambda t,T: building.dTdt(t,T)
 T0 = [295,295,295,295,295,295,295]
 # ODEOPTS = odeset('MaxStep',0.1)
 # [tRange,T] = ode15s(f,[1 10],T0,ODEOPTS)
-#^def the hardest part to convert to python. 
-#vode, method =bdf, order=15 was suggested here: https://stackoverflow.com/questions/2088473/integrate-stiff-odes-with-python
-# ode15s = scipy.integrate.ode(f)
-# ode15s.set_integrator('vode',method = "bdf", max_step=0.1,order=15)
-# ode15s.set_initial_value(T0,1) #sets initial T value and starts at time=1
-# tRange=[1]
-# T=[[295,295,295,295,295,295,295]]
+# ^def the hardest part to convert to python. 
+# vode, method =bdf, order=15 was suggested here: https://stackoverflow.com/questions/2088473/integrate-stiff-odes-with-python
+ode15s = scipy.integrate.ode(f)
+ode15s.set_integrator('vode',method = "bdf", max_step=0.1,order=15)
+ode15s.set_initial_value(T0,1) #sets initial T value and starts at time=1
+tRange=[1]
+T=[T0]
 
-# # from documentation here: https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.ode.html
-# while ode15s.successful() and ode15s.t<=5:
-#     T.append(ode15s.integrate(ode15s.t+.1))
-#     tRange.append(ode15s.t+.1)
-#     print(ode15s.t)
+# from documentation here: https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.ode.html
+while ode15s.successful() and ode15s.t<=5:
+    T.append(ode15s.integrate(ode15s.t+.1))
+    tRange.append(ode15s.t+.1)
+    print(ode15s.t)
 
-# print(tRange)
+print(tRange)
 
 # trying this https://stackoverflow.com/questions/8741003/how-to-solve-a-stiff-ode-with-python
-solution = scipy.integrate.solve_ivp(f, [1, 2],T0, method='BDF', first_step =0.1, min_step=.1, max_step=.1, dense_output=True)
-tRange = solution.t.tolist()
-T=solution.y.tolist()
+# solution = scipy.integrate.solve_ivp(f, [1, 2],T0, method='BDF', first_step =0.1, max_step=.1, dense_output=True)
+# tRange = solution.t.tolist()
+# T=solution.y.tolist()
 
 toc = time.time()-tic
 print("simulation finished in " +str(toc)+ "seconds")
@@ -143,11 +143,10 @@ import matplotlib.pyplot as plt
 
 plot0 = plt.figure(0)
 
-fig1,ax1=plt.subplots(4)
+fig1,ax1=plt.subplots(3)
 # ax1[0].plot(tRange,T)
 for i in range(len(T)):
     ax1[0].plot(tRange,T[i])
-print(tRange)
 ax1[0].set_ylabel('T (K)')
 ax1[0].legend(['Room 1','Room 2','Room 3','Room 4','Room 5','Room 6','Room 7'])
 ax1[1].plot(tRange,building.outside.T(tRange))
@@ -155,13 +154,12 @@ ax1[1].plot(tRange,building.outside.T_sky(tRange))
 ax1[1].plot(tRange,building.ground.T(tRange))
 ax1[1].legend(['T_air','T_sky','T_ground'])
 ax1[1].set_ylabel('T (K)')
-# ax1[2].set_xlabel('time (days)')
+ax1[2].set_xlabel('time (days)')
 ax1[2].plot(tRange,building.outside.S(tRange))
-# ax1[2].plot(np.array(range(10,100))*.1,building.outside.S(np.array(range(10,100))*.1))
 ax1[2].set_ylabel('Solar Radiance (W/m^2)')
-ax1[3].plot(tRange,building.heater.power_used)
-ax1[3].set_xlabel('time (days)')
-ax1[3].set_ylabel('Energy usage rate (kW)')
+# ax1[3].plot(tRange,building.heater.power_used)
+# ax1[3].set_xlabel('time (days)')
+# ax1[3].set_ylabel('Energy usage rate (kW)')
 
 plot1 = plt.figure(1)
 fig2,ax2=plt.subplots(7)

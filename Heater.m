@@ -34,7 +34,8 @@ classdef Heater < handle
             %  - sky: obj.outside.T_sky(t)
             %  - ground: obj.ground.T(t)
             TH = max(obj.Trange); % Replace w/ your control logic for setting TH
-            fH = [0,0,0,0,0,0,0]; % Replace w/ your control logic for setting flows
+            fH = obj.simpleHeatingFlows(T); % Replace w/ your control logic for setting flow
+
             if ~(TH <= max(obj.Trange) && TH>=min(obj.Trange)) %checks that TH is in the proper range
                 error('Temperature set point must fall within THrange')
             end
@@ -42,7 +43,28 @@ classdef Heater < handle
                 error('flows must be equal to number of rooms (7)')
             end
             if sum(fH) > obj.fmax %checks that flows are within max rate
+                sum(fH)
                 error('sum of flows exceeds maximum flow rate')
+            end
+        end
+        function simpleFlows = simpleHeatingFlows(obj,T)
+            rooms=obj.building.rooms;
+            TNeeded = mean(reshape([rooms.T_range],[2,7]))-T.';
+            for i =1:7
+                if TNeeded(i) <0
+                    TNeeded(i)=0;
+                end
+            end
+%             if sum(TNeeded)<.00001
+%                 simpleFlows=zeros(1, 7);
+%             else
+                %simpleFlows = (obj.last_fH*.2+obj.fmax*TNeeded/sum(TNeeded)*.5);
+                %TNeeded/sum(TNeeded)
+            if sum(TNeeded)>=1
+                simpleFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
+            else
+                 simpleFlows = obj.fmax*TNeeded;
+%                 end
             end
         end
         function p = power(obj,t,T)
