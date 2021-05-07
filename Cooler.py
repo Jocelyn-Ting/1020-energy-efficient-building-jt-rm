@@ -25,7 +25,8 @@ class Cooler:
         #  - sky: self.outside.T_sky(t)
         #  - ground: self.ground.T(t)
         TC = min(self.Trange) #Replace w/ your control logic for setting TC
-        fC = [0,0,0,0,0,0,0] # Replace w/ your control logic for setting flows
+        # fC = [0,0,0,0,0,0,0] # Replace w/ your control logic for setting flows
+        fC = self.simpleCoolingFlows(T)
         assert TC <= max(self.Trange) and TC>=min(self.Trange),\
             'Temperature set point must fall within THrange' #checks that TC is in the proper range
 
@@ -34,6 +35,18 @@ class Cooler:
         assert sum(fC) < self.fmax, 'sum of flows exceeds maximum flow rate' #checks that flows are within max rate
 
         return [TC,fC]
+
+    def simpleCoolingFlows(self,T):
+        rooms=self.building.rooms
+        TNeeded = np.array([(room.T_range[0]+room.T_range[1])/2 for room in rooms])-np.array(T)
+        for i in range(0,len(TNeeded)):
+            if TNeeded[i] >0:
+                TNeeded[i]=0
+        if -sum(TNeeded)>=1:
+            flows = self.fmax*TNeeded/sum(TNeeded)*.999
+        else:
+            flows = -self.fmax*TNeeded
+        return flows
     
     def power(self,t,T):
         [TC,fC] = self.getCooling(t,T)

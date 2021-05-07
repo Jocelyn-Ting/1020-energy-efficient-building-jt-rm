@@ -123,12 +123,13 @@ T=[T0]
 
 # from documentation here: https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.ode.html
 while ode15s.successful() and ode15s.t<=5:
-    T.append(ode15s.integrate(ode15s.t+.1))
+    soln=ode15s.integrate(ode15s.t+.1)
+    T.append(soln)
     tRange.append(ode15s.t+.1)
     print(ode15s.t)
 
 print(tRange)
-
+print(T)
 # trying this https://stackoverflow.com/questions/8741003/how-to-solve-a-stiff-ode-with-python
 # solution = scipy.integrate.solve_ivp(f, [1, 2],T0, method='BDF', first_step =0.1, max_step=.1, dense_output=True)
 # tRange = solution.t.tolist()
@@ -144,9 +145,9 @@ import matplotlib.pyplot as plt
 plot0 = plt.figure(0)
 
 fig1,ax1=plt.subplots(3)
-# ax1[0].plot(tRange,T)
-for i in range(len(T)):
-    ax1[0].plot(tRange,T[i])
+ax1[0].plot(tRange,T)
+# for i in range(len(T)):
+#     ax1[0].plot(tRange,T[i])
 ax1[0].set_ylabel('T (K)')
 ax1[0].legend(['Room 1','Room 2','Room 3','Room 4','Room 5','Room 6','Room 7'])
 ax1[1].plot(tRange,building.outside.T(tRange))
@@ -165,8 +166,8 @@ plot1 = plt.figure(1)
 fig2,ax2=plt.subplots(7)
 
 for ii in range(0,7):
-    # ax2[ii].plot(tRange,[temps[ii] for temps in T])
-    ax2[ii].plot(tRange,T[ii])
+    ax2[ii].plot(tRange,[temps[ii] for temps in T])
+    # ax2[ii].plot(tRange,T[ii])
     ax2[ii].plot(tRange,Tmin[ii]*np.ones(len(tRange)))
     ax2[ii].plot(tRange,Tmax[ii]*np.ones(len(tRange)))
     ax2[ii].legend(['Temp room '+str(ii), 'min', 'max'])

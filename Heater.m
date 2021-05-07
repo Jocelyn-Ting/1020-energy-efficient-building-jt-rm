@@ -70,6 +70,7 @@ classdef Heater < handle
         function p = power(obj,t,T)
             % Amount of power required to heat up air from external temp
             % (assume constant volume process, and 100% heating efficiency)
+            T_out = obj.outside.T(t);
             [TH,fH] = obj.getHeating(t,T);
             p = obj.rho_air* obj.cv_air * sum(fH) * (TH - T_out);
         end

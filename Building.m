@@ -27,6 +27,7 @@ classdef Building < handle
         end
         function dTdt = dTdt(obj,t,T)
             dTdt = zeros(7,1);
+            t
             for roomidx = 1:length(obj.rooms)
                 room = obj.rooms(roomidx);
                 dTdt(roomidx) = room.dTdt(t,T);

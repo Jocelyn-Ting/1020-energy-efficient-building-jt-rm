@@ -28,7 +28,7 @@ class Heater:
         #  - ground: self.ground.T(t)
         TH = max(self.Trange) #Replace w/ your control logic for setting TH
         #fH = [0,0,0,0,0,0,0]
-        fH = self.optHeatingFlows(t,T,.1) # Replace w/ your control logic for setting flows
+        fH = self.simpleHeatingFlows(T) # Replace w/ your control logic for setting flows
         #print(fH)
         assert TH <= max(self.Trange) and TH >= min(self.Trange),\
             'Temperature set point must fall within THrange' #checks that TH is in the proper range
@@ -60,8 +60,10 @@ class Heater:
         for i in range(0,len(TNeeded)):
             if TNeeded[i] <0:
                 TNeeded[i]=0
-        flows = self.fmax*TNeeded/sum(TNeeded)*.999
-        print(flows)
+        if sum(TNeeded)>=1:
+            flows = self.fmax*TNeeded/sum(TNeeded)*.999
+        else:
+            flows = self.fmax*TNeeded
         return flows
 
     def extDT(self,t,T,roomidx,dt):
