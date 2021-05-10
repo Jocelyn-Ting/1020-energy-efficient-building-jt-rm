@@ -34,8 +34,12 @@ classdef Heater < handle
             %  - sky: obj.outside.T_sky(t)
             %  - ground: obj.ground.T(t)
             TH = max(obj.Trange); % Replace w/ your control logic for setting TH
-            fH = obj.simpleHeatingFlows(T); % Replace w/ your control logic for setting flow
-
+            fH = obj.minHeatingFlows(T); % Replace w/ your control logic for setting flow
+%             if isempty(fH) %linprog didn't work
+%                 fH = obj.simpleHeatingFlows(T);
+%             end
+%             obj.power_array(end+1)=obj.power(TH,fH,t);
+%             obj.time_array(end+1)=t;
             if ~(TH <= max(obj.Trange) && TH>=min(obj.Trange)) %checks that TH is in the proper range
                 error('Temperature set point must fall within THrange')
             end
@@ -55,24 +59,70 @@ classdef Heater < handle
                     TNeeded(i)=0;
                 end
             end
-%             if sum(TNeeded)<.00001
-%                 simpleFlows=zeros(1, 7);
-%             else
-                %simpleFlows = (obj.last_fH*.2+obj.fmax*TNeeded/sum(TNeeded)*.5);
-                %TNeeded/sum(TNeeded)
             if sum(TNeeded)>=1
                 simpleFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
             else
-                 simpleFlows = obj.fmax*TNeeded;
-%                 end
+                simpleFlows = obj.fmax*TNeeded;
             end
         end
+        function minFlows = minHeatingFlows(obj,T)
+            rooms=obj.building.rooms;
+            Tranges = reshape([rooms.T_range],[2,7]);
+            TNeeded = Tranges(1,:)-T.'+1;
+            for i =1:7
+                if TNeeded(i) <0
+                    TNeeded(i)=0;
+                end
+            end
+            if sum(TNeeded)>=1
+                minFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
+            else
+                minFlows = obj.fmax*TNeeded;
+            end
+        end
+%         function p = power(obj,heaterTemp,heaterFlow,t)
+%             % Amount of power required to heat up air from external temp
+%             % (assume constant volume process, and 100% heating efficiency)
+%             T_out = obj.outside.T(t);
+%             TH = heaterTemp;
+%             fH = heaterFlow;
+%             p = obj.rho_air* obj.cv_air * sum(fH) * (TH - T_out);
+%         end
         function p = power(obj,t,T)
             % Amount of power required to heat up air from external temp
             % (assume constant volume process, and 100% heating efficiency)
             T_out = obj.outside.T(t);
             [TH,fH] = obj.getHeating(t,T);
             p = obj.rho_air* obj.cv_air * sum(fH) * (TH - T_out);
+        end
+        function extdT = extDT(self,t,T,dt)
+            extdT=zeros(1,7);
+            for roomidx=1:7
+                room = self.building.rooms(roomidx);
+                dQdt_cc = room.getCC(t,T); % Gets conductive/convective heat transfer amt
+                dQdt_LW_rad = room.getLWRadiation(t,T); % gets LW radiative heat transfer amount
+                dQdt_SW_rad = room.getSWRadiation(t); % gets SW radiative heat transfer amount
+                dQdt_internal = room.getInternal(t); % gets internal heat generation rate
+                dTdt = (24*3600/(room.rho_air*room.cv_air*room.V))*(dQdt_cc + dQdt_LW_rad + dQdt_SW_rad + dQdt_internal);
+                extdT(roomidx)= dTdt*dt;
+            end
+        end
+        function flows = optFlows(obj, t, T, dt)
+            rooms=obj.building.rooms;
+            TH = max(obj.Trange);
+            f=ones(1,7);
+            dTs = 3600*24*dt*obj.cp_air*(TH*ones(1,7)-T.')./(obj.cv_air*[rooms.V]);
+            dTs_doubled = cat(1,diag(dTs),-diag(dTs));
+            A=cat(1,ones(1,7),dTs_doubled);
+            Tranges = reshape([rooms.T_range],[2,7]);
+            TrangeMax = Tranges(2,:);
+            TrangeMin = Tranges(1,:);
+            extdTs=obj.extDT(t,T,dt);
+            ineqs1=TrangeMax-(T.'+extdTs);
+            ineqs2=T.'+extdTs-TrangeMin;
+            b=cat(2,obj.fmax,ineqs1,ineqs2);
+            options = optimoptions('linprog','Display','none');
+            flows = linprog(f,A,b,[],[],zeros(1,7),[],options);
         end
     end
 end

@@ -26,7 +26,7 @@ class Building:
     
     def dTdt(self,t,T):
         dTdt = []
-        print(t)
+        #print(t)
         for roomidx in range(0,len(self.rooms)):
             room = self.rooms[roomidx]
             roomdTdt = room.dTdt(t,T)

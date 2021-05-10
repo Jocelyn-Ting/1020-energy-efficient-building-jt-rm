@@ -28,7 +28,7 @@ class Heater:
         #  - ground: self.ground.T(t)
         TH = max(self.Trange) #Replace w/ your control logic for setting TH
         #fH = [0,0,0,0,0,0,0]
-        fH = self.simpleHeatingFlows(T) # Replace w/ your control logic for setting flows
+        fH = self.optHeatingFlows(t, T, .1) # Replace w/ your control logic for setting flows
         #print(fH)
         assert TH <= max(self.Trange) and TH >= min(self.Trange),\
             'Temperature set point must fall within THrange' #checks that TH is in the proper range
@@ -84,6 +84,7 @@ class Heater:
         dTs_doubled = [[dT, -dT] for dT in dTs]
         dTs_doubled_flattened = [item for sublist in dTs_doubled for item in sublist]
         A=np.concatenate(([[1,1,1,1,1,1,1]],dTs_doubled_flattened))
+        print(A)
         Tranges = np.array([room.T_range for room in rooms])
         ineqs = [[max(Tranges[i])-(T[i]+self.extDT(t,T,i,dt)), (T[i]+self.extDT(t,T,i,dt)) - min(Tranges[i])] for i in range(len(Tranges))]
         flat_ineqs = [item for sublist in ineqs for item in sublist]

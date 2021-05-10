@@ -36,7 +36,10 @@ classdef Cooler < handle
             %  - ground: obj.ground.T(t)
             TC = min(obj.Trange); % Replace w/ your control logic for setting TC
 %             fC = [0,0,0,0,0,0,0]; % Replace w/ your control logic for setting flows
-            fC = obj.simpleCoolingFlows(T);
+%             fC = obj.simpleCoolingFlows(T);
+            fC = obj.minCoolingFlows(T);
+%             obj.power_array(end+1) = obj.power(TC,fC,t);
+%             obj.time_array(end+1) = t;
             if ~(TC <= max(obj.Trange) && TC>=min(obj.Trange)) %checks that TC is in the proper range
                 error('Temperature set point must fall within TCrange')
             end
@@ -55,17 +58,26 @@ classdef Cooler < handle
                     TNeeded(i)=0;
                 end
             end
-%             if -sum(TNeeded)<.00001
-%                 simpleFlows=zeros(1, 7);
-%             else
-                %simpleFlows = (obj.last_fH*.2+obj.fmax*TNeeded/sum(TNeeded)*.5);
-                %TNeeded/sum(TNeeded)
                 if -sum(TNeeded)>=1
                     simpleFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
                 else
                      simpleFlows = -obj.fmax*TNeeded;
                 end
-%             end
+        end
+        function minFlows = minCoolingFlows(obj,T)
+            rooms=obj.building.rooms;
+            Tranges = reshape([rooms.T_range],[2,7]);
+            TNeeded = Tranges(2,:)-T.'-1;
+            for i =1:7
+                if TNeeded(i) >0
+                    TNeeded(i)=0;
+                end
+            end
+                if -sum(TNeeded)>=1
+                    minFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
+                else
+                     minFlows = -obj.fmax*TNeeded;
+                end
         end
         function p = power(obj,t,T)
             [TC,fC] = obj.getCooling(t,T);
@@ -73,5 +85,6 @@ classdef Cooler < handle
             efficiency = (TC/(T_out - TC));
             p = obj.rho_air * obj.cv_air * sum(fC) * (T_out-TC)/efficiency;
         end
+        
     end
 end
