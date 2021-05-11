@@ -34,7 +34,7 @@ classdef Heater < handle
             %  - sky: obj.outside.T_sky(t)
             %  - ground: obj.ground.T(t)
             TH = max(obj.Trange); % Replace w/ your control logic for setting TH
-            fH = obj.minHeatingFlows(T); % Replace w/ your control logic for setting flow
+            fH = obj.simpleHeatingFlows(T); % Replace w/ your control logic for setting flow
 %             if isempty(fH) %linprog didn't work
 %                 fH = obj.simpleHeatingFlows(T);
 %             end

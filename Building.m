@@ -11,6 +11,7 @@ classdef Building < handle
         t; %Current time stamp (days)
         outside;
         ground;
+        realBuilding;
     end
     properties (Dependent)
         T; % vector of temperature of each room at current time step
@@ -24,6 +25,7 @@ classdef Building < handle
             b.rooms = [];
             b.outside = Outside();
             b.ground = Ground();
+            b.realBuilding = RealBuilding();
         end
         function dTdt = dTdt(obj,t,T)
             dTdt = zeros(7,1);

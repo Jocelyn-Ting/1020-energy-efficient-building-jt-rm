@@ -37,7 +37,7 @@ classdef Cooler < handle
             TC = min(obj.Trange); % Replace w/ your control logic for setting TC
 %             fC = [0,0,0,0,0,0,0]; % Replace w/ your control logic for setting flows
 %             fC = obj.simpleCoolingFlows(T);
-            fC = obj.minCoolingFlows(T);
+            fC = obj.simpleCoolingFlows(T);
 %             obj.power_array(end+1) = obj.power(TC,fC,t);
 %             obj.time_array(end+1) = t;
             if ~(TC <= max(obj.Trange) && TC>=min(obj.Trange)) %checks that TC is in the proper range
