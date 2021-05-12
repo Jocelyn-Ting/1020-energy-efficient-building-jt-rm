@@ -169,4 +169,76 @@ function building = addLayout(layoutNum)
         building.addRoof(6,24,RSI_roofing);
         building.addRoof(7,30,RSI_roofing);
     end
+    
+    
+    %%
+    %layout 3 - highest R-value
+    if layoutNum == 3
+        % Building Materials
+        RSI_interior_wall = .1*RSI_plywood+.4*RSI_foam;
+        RSI_exterior_wall = .2*RSI_concrete+.4*RSI_foam+.1*RSI_plywood;
+        RSI_roofing = 0.2*RSI_plywood+0.4*RSI_foam+RSI_wood_roof;
+        
+        L = 25; %length of building
+        W = 18; %width of building
+        building = Building(L,W);
+        TH_range = [300,320];
+        fH_max = 4;
+        building.addHeater(TH_range,fH_max,building)
+        TC_range = [285,295];
+        fC_max = 4;
+        building.addCooler(TC_range,fC_max,building)
+        %% Add rooms
+        % use building.addRoom(roomID,TRange,roomL,roomW)
+        building.addRoom(1,[294,300],6,10)
+        building.addRoom(2,[294,300],6,8)
+        building.addRoom(3,[294,300],13,13)
+        building.addRoom(4,[294,300],6,11)
+        building.addRoom(5,[294,300],6,7)
+        building.addRoom(6,[291,305],6,5)
+        building.addRoom(7,[290,295],7,5)
+
+        %% Add walls, roof, floor
+        %Add interior walls (between 2 rooms) using: building.addInteriorWall(Room1ID,Room2ID,area,R_eff)
+        building.addInteriorWall(1,2,18,r_par([2,16],[RSI_steel_door,RSI_interior_wall]));
+        building.addInteriorWall(1,3,30,r_par([4,26],[RSI_steel_door,RSI_interior_wall]));
+        building.addInteriorWall(2,3,9,r_par([2,7],[RSI_steel_door,RSI_interior_wall]));
+        building.addInteriorWall(2,6,15,r_par([2,13],[RSI_steel_door,RSI_interior_wall]));
+        building.addInteriorWall(3,4,18,r_par([4,14],[RSI_steel_door,RSI_interior_wall]));
+        building.addInteriorWall(3,5,21,r_par([2,19],[RSI_steel_door,RSI_interior_wall]));
+        building.addInteriorWall(3,6,18,r_par([2,16],[RSI_steel_door,RSI_interior_wall]));
+        building.addInteriorWall(3,7,21,r_par([2,19],[RSI_steel_door,RSI_interior_wall]));
+        building.addInteriorWall(4,5,18,r_par([2,16],[RSI_steel_door,RSI_interior_wall]));
+        building.addInteriorWall(4,7,15,RSI_interior_wall);
+        building.addInteriorWall(6,7,15,RSI_interior_wall);
+
+
+        %Add exterior walls (between room and outside) using: building.addExteriorWall(RoomID,area,R_eff)
+        building.addExteriorWall(1,48,r_par([4,16,28],[RSI_wood_door, RSI_2p_glass, RSI_exterior_wall]));
+        building.addExteriorWall(2,42,r_par([2,14,26],[RSI_steel_door, RSI_2p_glass, RSI_exterior_wall]));
+        building.addExteriorWall(3,39,r_par([20,19],[RSI_2p_glass, RSI_exterior_wall]));
+        building.addExteriorWall(4,51,r_par([4,16,31],[RSI_steel_door, RSI_2p_glass, RSI_exterior_wall]));
+        building.addExteriorWall(5,39,RSI_exterior_wall);
+        building.addExteriorWall(6,18,RSI_exterior_wall);
+        building.addExteriorWall(7,21,RSI_exterior_wall);
+
+
+        %add floor with: building.addFloor(RoomID,area,R_eff)
+        building.addFloor(1,60,RSI_hardwood_floor)
+        building.addFloor(2,48,RSI_hardwood_floor)
+        building.addFloor(3,169,RSI_hardwood_floor)
+        building.addFloor(4,66,RSI_hardwood_floor)
+        building.addFloor(5,42,RSI_hardwood_floor)
+        building.addFloor(6,30,RSI_hardwood_floor)
+        building.addFloor(7,35,RSI_hardwood_floor)
+
+        %add roof with: building.addRoof(roomID,area,R_eff)
+        building.addRoof(1,60,RSI_roofing);
+        building.addRoof(2,48,RSI_roofing);
+        building.addRoof(3,169,RSI_roofing);
+        building.addRoof(4,66,RSI_roofing);
+        building.addRoof(5,42,RSI_roofing);
+        building.addRoof(6,30,RSI_roofing);
+        building.addRoof(7,35,RSI_roofing);
+    end
 end
