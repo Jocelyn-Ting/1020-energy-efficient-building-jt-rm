@@ -34,7 +34,7 @@ function building = addLayout(layoutNum)
     %flows from both the heater and cooler
     if layoutNum == 1
         % Building Materials
-        RSI_interior_wall = .2*RSI_concrete+.1*RSI_fiberglass;
+        RSI_interior_wall = .2*RSI_concrete+.3*RSI_fiberglass;
         RSI_exterior_wall = .2*RSI_concrete+.3*RSI_fiberglass+.3*RSI_concrete;
         RSI_roofing = 0.1*RSI_concrete+0.3*RSI_fiberglass+RSI_asphalt_roof;
         
@@ -103,9 +103,9 @@ function building = addLayout(layoutNum)
     %layout 2 - maximize cost.
     if layoutNum == 2
         % Building Materials
-        RSI_interior_wall = .3*RSI_drywall+.4*RSI_foam;
-        RSI_exterior_wall = .5*RSI_brick+.4*RSI_foam+.3*RSI_drywall;
-        RSI_roofing = 0.3*RSI_drywall+0.4*RSI_foam+RSI_wood_roof;
+        RSI_interior_wall = .3*RSI_drywall+.3*RSI_foam;
+        RSI_exterior_wall = .5*RSI_brick+.3*RSI_foam+.3*RSI_drywall;
+        RSI_roofing = 0.3*RSI_drywall+0.3*RSI_foam+RSI_wood_roof;
         
         L = 24; %length of building
         W = 15; %width of building
@@ -175,9 +175,9 @@ function building = addLayout(layoutNum)
     %layout 3 - highest R-value
     if layoutNum == 3
         % Building Materials
-        RSI_interior_wall = .1*RSI_plywood+.4*RSI_foam;
-        RSI_exterior_wall = .2*RSI_concrete+.4*RSI_foam+.1*RSI_plywood;
-        RSI_roofing = 0.2*RSI_plywood+0.4*RSI_foam+RSI_wood_roof;
+        RSI_interior_wall = .1*RSI_plywood+.3*RSI_foam;
+        RSI_exterior_wall = .2*RSI_concrete+.3*RSI_foam+.1*RSI_plywood;
+        RSI_roofing = 0.2*RSI_plywood+0.3*RSI_foam+RSI_wood_roof;
         
         L = 25; %length of building
         W = 18; %width of building
