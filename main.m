@@ -7,7 +7,7 @@ Tmin=[294,294,294,294,294,291,290];
 Tmax=[300,300,300,300,300,305,295];
 %add rooms, walls, roof, floor
 %specify building layout scenario
-building = addLayout(2);
+building = addLayout(3);
 
 %% Running simulation
 tic
