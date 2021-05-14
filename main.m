@@ -83,19 +83,3 @@ for ii = 1:7
     plot(tRange,Tmax(ii)*ones(size(tRange)))
     legend(strcat('Temp room ', num2str(ii)), 'min', 'max')
 end
-%save('PID_control_layout1.mat','tRange','T')
-% use r_par function to calculate Reff for walls
-% reff13 = r_par([2,16],[RSI_wood_door,RSI_interior_wall])
-% reff23 = r_par([2,4],[RSI_wood_door,RSI_interior_wall])
-% reff43 = r_par([2,16],[RSI_glass_door,RSI_interior_wall])
-% reff53 = r_par([2,4],[RSI_wood_door,RSI_interior_wall])
-% reff63 = r_par([2,10],[RSI_wood_door,RSI_interior_wall])
-% reff73 = r_par([2,10],[RSI_wood_door,RSI_interior_wall])
-% 
-% reff1E = r_par([2,4,12],[RSI_glass_door, RSI_2p_glass, RSI_exterior_wall])
-% reff2Ea = r_par([2,13],[RSI_2p_glass,RSI_exterior_wall])
-% reff2Eb = r_par([2,19],[RSI_2p_glass,RSI_exterior_wall])
-% reff3E = r_par([4,2,18],[RSI_2p_glass,RSI_glass_door,RSI_exterior_wall])
-% reff4Ea = r_par([2,16],[RSI_2p_glass,RSI_exterior_wall])
-% reff4Eb = r_par([2,13],[RSI_2p_glass,RSI_exterior_wall])
-% reff6E = r_par([2,10],[RSI_glass_door,RSI_exterior_wall])

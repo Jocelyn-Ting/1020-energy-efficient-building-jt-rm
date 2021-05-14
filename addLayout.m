@@ -38,6 +38,24 @@ function building = addLayout(layoutNum)
         RSI_exterior_wall = .2*RSI_concrete+.3*RSI_fiberglass+.3*RSI_concrete;
         RSI_roofing = 0.1*RSI_concrete+0.3*RSI_fiberglass+RSI_asphalt_roof;
         
+        % use r_par function to calculate Reff for walls
+        reff13 = r_par([2,22],[RSI_wood_door,RSI_interior_wall]);
+        reff15 = r_par([2,13],[RSI_wood_door,RSI_interior_wall]);
+        reff23 = r_par([2,4],[RSI_wood_door,RSI_interior_wall]);
+        reff24 = r_par([2,16],[RSI_wood_door,RSI_interior_wall]);
+        reff34 = r_par([4,26],[RSI_wood_door,RSI_interior_wall]);
+        reff35 = r_par([2,4],[RSI_wood_door,RSI_interior_wall]);
+        reff36 = r_par([2,10],[RSI_wood_door,RSI_interior_wall]);
+        reff37 = r_par([2,16],[RSI_wood_door,RSI_interior_wall]);
+ 
+        reff1E = r_par([4,8,12],[RSI_wood_door, RSI_1p_glass, RSI_exterior_wall]);
+        reff2Ea = r_par([8,16],[RSI_1p_glass,RSI_exterior_wall]);
+        reff2Eb = r_par([4,11],[RSI_1p_glass,RSI_exterior_wall]);
+        reff3E = r_par([16,20],[RSI_1p_glass,RSI_exterior_wall]);
+        reff4Ea = r_par([2,10,18],[RSI_wood_door,RSI_1p_glass,RSI_exterior_wall]);
+        reff4Eb = r_par([4,14],[RSI_1p_glass,RSI_exterior_wall]);
+        reff6E = r_par([2,10],[RSI_wood_door,RSI_exterior_wall]);
+        
         L = 22; %length of building
         W = 15; %width of building
         building = Building(L,W);
@@ -106,6 +124,26 @@ function building = addLayout(layoutNum)
         RSI_interior_wall = .3*RSI_drywall+.3*RSI_foam;
         RSI_exterior_wall = .5*RSI_brick+.3*RSI_foam+.3*RSI_drywall;
         RSI_roofing = 0.3*RSI_drywall+0.3*RSI_foam+RSI_wood_roof;
+        
+        % use r_par function to calculate Reff for walls
+        reff12 = r_par([2,16],[RSI_steel_door,RSI_interior_wall]);
+        reff13 = r_par([4,8],[RSI_steel_door,RSI_interior_wall]);
+        reff23 = r_par([2,19],[RSI_steel_door,RSI_interior_wall]);
+        reff24 = r_par([2,16],[RSI_steel_door,RSI_interior_wall]);
+        reff34 = r_par([4,11],[RSI_steel_door,RSI_interior_wall]);
+        reff35 = r_par([2,10],[RSI_steel_door,RSI_interior_wall]);
+        reff36 = r_par([2,10],[RSI_steel_door,RSI_interior_wall]);
+        reff37 = r_par([2,13],[RSI_steel_door,RSI_interior_wall]);
+        reff45 = r_par([2,19],[RSI_steel_door,RSI_interior_wall]);
+        reff67 = r_par([2,16],[RSI_steel_door,RSI_interior_wall]);
+ 
+        reff1Ea = r_par([4,10,16],[RSI_glass_door, RSI_2p_glass, RSI_exterior_wall]);
+        reff1Eb = r_par([8,10],[RSI_2p_glass,RSI_exterior_wall]);
+        reff2E = r_par([8,13],[RSI_2p_glass,RSI_exterior_wall]);
+        reff3E = r_par([2,12,19],[RSI_steel_door, RSI_2p_glass, RSI_exterior_wall]);
+        reff4Ea = r_par([2,12,19],[RSI_steel_door, RSI_2p_glass, RSI_exterior_wall]);
+        reff4Eb = r_par([6,15],[RSI_2p_glass,RSI_exterior_wall]);
+        reff6E = r_par([2,10],[RSI_steel_door,RSI_exterior_wall]);
         
         L = 24; %length of building
         W = 15; %width of building
@@ -179,6 +217,25 @@ function building = addLayout(layoutNum)
         RSI_exterior_wall = .2*RSI_concrete+.3*RSI_foam+.1*RSI_plywood;
         RSI_roofing = 0.2*RSI_plywood+0.3*RSI_foam+RSI_wood_roof;
         
+        % use r_par function to calculate Reff for walls
+        reff12 = r_par([2,16],[RSI_steel_door,RSI_interior_wall]);
+        reff13 = r_par([4,26],[RSI_steel_door,RSI_interior_wall]);
+        reff23 = r_par([2,7],[RSI_steel_door,RSI_interior_wall]);
+        reff26 = r_par([2,13],[RSI_steel_door,RSI_interior_wall]);
+        reff34 = r_par([4,14],[RSI_steel_door,RSI_interior_wall]);
+        reff35 = r_par([2,19],[RSI_steel_door,RSI_interior_wall]);
+        reff36 = r_par([2,16],[RSI_steel_door,RSI_interior_wall]);
+        reff37 = r_par([2,19],[RSI_steel_door,RSI_interior_wall]);
+        reff45 = r_par([2,16],[RSI_steel_door,RSI_interior_wall]);
+
+        reff1Ea = r_par([4,8,18],[RSI_glass_door, RSI_2p_glass, RSI_exterior_wall]);
+        reff1Eb = r_par([8,10],[RSI_2p_glass,RSI_exterior_wall]);
+        reff2Ea = r_par([2,4,12],[RSI_steel_door, RSI_2p_glass, RSI_exterior_wall]);
+        reff2Eb = r_par([10,14],[RSI_2p_glass,RSI_exterior_wall]);
+        reff3E = r_par([20,19],[RSI_2p_glass, RSI_exterior_wall]);
+        reff4Ea = r_par([4,10,19],[RSI_steel_door, RSI_2p_glass, RSI_exterior_wall]);
+        reff4Eb = r_par([6,12],[RSI_2p_glass,RSI_exterior_wall]);
+
         L = 25; %length of building
         W = 18; %width of building
         building = Building(L,W);
