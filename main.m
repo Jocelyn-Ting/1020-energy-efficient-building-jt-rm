@@ -7,14 +7,15 @@ Tmin=[294,294,294,294,294,291,290];
 Tmax=[300,300,300,300,300,305,295];
 %add rooms, walls, roof, floor
 %specify building layout scenario
-building = addLayout(3);
+building = addLayout(4);
 
 %% Running simulation
 tic
 f = @(t,T) building.dTdt(t,T);
-T0 = [295;295;295;295;295;295;295];
+% T0 = [295;295;295;295;295;295;295];
+T0 = [298;298;298;298;298;298;298]; %to test starting in summer
 ODEOPTS = odeset('MaxStep',0.1);
-[tRange,T] = ode15s(f,[1 365],T0,ODEOPTS);
+[tRange,T] = ode15s(f,[160 180],T0,ODEOPTS);
 % If you are running into difficulties with ode15s getting stuck, try
 % using, which uses a different solution algorithm, but it runs slower
 %[tRange,T] = ode23s(f,[1 10],T0,ODEOPTS);
@@ -42,6 +43,7 @@ disp(tRange)
 figure(1);
 subplot(5,1,1)
 plot(tRange,T)
+title('Layout 1 PID control')
 ylabel('T (K)')
 legend('Room 1','Room 2','Room 3','Room 4','Room 5','Room 6','Room 7')
 subplot(5,1,2)
@@ -55,11 +57,12 @@ subplot(5,1,3)
 plot(tRange,building.outside.S(tRange))
 ylabel('Solar Radiance (W/m^2)')
 subplot(5,1,4)
+yyaxis left
 plot(tRange, coolerPowerkW)
-hold on
+ylabel('Energy Usage (W)')
+yyaxis right
 plot(tRange, heaterPowerkW)
 legend('cooler','heater')
-ylabel('Energy Usage (W)')
 title(strcat('Total yearly energy (kWh) : cooler = ',coolerEnergy,' heater = ',heaterEnergy));
 subplot(5,1,5)
 xlabel('time (days)')
@@ -74,13 +77,13 @@ figure(2)
 for ii = 1:7
     subplot(7,1,ii)
     plot(tRange,T(:,ii)')
-    hold on;
+     hold on;
     plot(tRange,Tmin(ii)*ones(size(tRange)))
     hold on;
     plot(tRange,Tmax(ii)*ones(size(tRange)))
     legend(strcat('Temp room ', num2str(ii)), 'min', 'max')
 end
-
+%save('PID_control_layout1.mat','tRange','T')
 % use r_par function to calculate Reff for walls
 % reff13 = r_par([2,16],[RSI_wood_door,RSI_interior_wall])
 % reff23 = r_par([2,4],[RSI_wood_door,RSI_interior_wall])

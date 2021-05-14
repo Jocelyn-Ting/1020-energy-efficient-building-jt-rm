@@ -6,6 +6,8 @@ classdef Cooler < handle
         outside % outside object
         ground % ground object
         building % the building that the cooler belongs to
+        tBack
+        intBack
     end
     properties (Constant)
         % Properties of air
@@ -22,6 +24,8 @@ classdef Cooler < handle
             h.building = building;
             h.outside = building.outside;
             h.ground = building.ground;
+            h.tBack=zeros(5,1);
+            h.intBack=zeros(5,7);
         end
         function [TC,fC] = getCooling(obj,t,T)
             % Input is a given timestamp t, and vector of room temperatures T
@@ -36,8 +40,8 @@ classdef Cooler < handle
             %  - ground: obj.ground.T(t)
             TC = min(obj.Trange); % Replace w/ your control logic for setting TC
 %             fC = [0,0,0,0,0,0,0]; % Replace w/ your control logic for setting flows
-%             fC = obj.simpleCoolingFlows(T);
             fC = obj.simpleCoolingFlows(T);
+            %fC = obj.advancedCoolingFlows(t,T);
 %             obj.power_array(end+1) = obj.power(TC,fC,t);
 %             obj.time_array(end+1) = t;
             if ~(TC <= max(obj.Trange) && TC>=min(obj.Trange)) %checks that TC is in the proper range
@@ -58,11 +62,40 @@ classdef Cooler < handle
                     TNeeded(i)=0;
                 end
             end
-                if -sum(TNeeded)>=1
+                if -sum(TNeeded)>=2
                     simpleFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
                 else
-                     simpleFlows = -obj.fmax*TNeeded;
+                     simpleFlows = -obj.fmax*TNeeded/2;
                 end
+        end
+        function advancedFlows = advancedCoolingFlows(obj,t,T)
+            rooms=obj.building.rooms;
+            TNeeded = T.'-mean(reshape([rooms.T_range],[2,7]))+2;
+            if t>=obj.tBack(1)+.0005
+                obj.tBack=circshift(obj.tBack,1);
+                obj.tBack(1)=t;
+                obj.intBack=circshift(obj.intBack,1,1);
+                obj.intBack(1,:)=TNeeded;
+            end
+            for i =1:7
+                integral = trapz(flip(obj.tBack),flip(obj.intBack(:,i)));
+                lastTemp=obj.intBack(2);
+                lastTime=obj.tBack(2);
+                if(t-lastTime)<1e-5 ||(t-lastTime)<0
+                    dTdt=0;
+                else
+                    dTdt=(T(i)-lastTemp)/(t-lastTime);
+                end
+                TNeeded(i)=1*TNeeded(i)+integral*4+dTdt/9e6;
+                if TNeeded(i) <0
+                    TNeeded(i)=0;
+                end
+            end
+            if sum(TNeeded)>=3
+                advancedFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
+            else
+                advancedFlows = obj.fmax*TNeeded/3;
+            end    
         end
         function minFlows = minCoolingFlows(obj,T)
             rooms=obj.building.rooms;
@@ -73,10 +106,10 @@ classdef Cooler < handle
                     TNeeded(i)=0;
                 end
             end
-                if -sum(TNeeded)>=1
+                if -sum(TNeeded)>=3
                     minFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
                 else
-                     minFlows = -obj.fmax*TNeeded;
+                     minFlows = -obj.fmax*TNeeded/3;
                 end
         end
         function p = power(obj,t,T)

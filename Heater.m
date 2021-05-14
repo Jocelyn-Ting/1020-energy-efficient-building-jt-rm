@@ -6,6 +6,8 @@ classdef Heater < handle
         outside % outside object
         ground % ground object
         building % the building that the cooler belongs to
+        tBack;
+        intBack;
     end
     properties (Constant)
         rho_air = 1.23; %kg m^-3
@@ -21,6 +23,8 @@ classdef Heater < handle
             h.building = building;
             h.outside = building.outside;
             h.ground = building.ground;
+            h.tBack=zeros(5,1);
+            h.intBack=zeros(5,7);
         end
         function [TH,fH] = getHeating(obj,t,T)
             % Input is a given timestamp t, and vector of room temperatures T
@@ -34,7 +38,7 @@ classdef Heater < handle
             %  - sky: obj.outside.T_sky(t)
             %  - ground: obj.ground.T(t)
             TH = max(obj.Trange); % Replace w/ your control logic for setting TH
-            fH = obj.simpleHeatingFlows(T); % Replace w/ your control logic for setting flow
+            fH = obj.simpleHeatingFlows(t,T); % Replace w/ your control logic for setting flow
 %             if isempty(fH) %linprog didn't work
 %                 fH = obj.simpleHeatingFlows(T);
 %             end
@@ -51,21 +55,64 @@ classdef Heater < handle
                 error('sum of flows exceeds maximum flow rate')
             end
         end
-        function simpleFlows = simpleHeatingFlows(obj,T)
+        function simpleFlows = simpleHeatingFlows(obj,t,T)
             rooms=obj.building.rooms;
-            TNeeded = mean(reshape([rooms.T_range],[2,7]))-T.';
+            if t>150&&t<275
+                TNeeded = [294,294,294,294,294,291,290]-T.';
+                    for i =1:7
+                    if TNeeded(i) <0
+                        TNeeded(i)=0;
+                    end
+                    end
+                if sum(TNeeded)>=1 
+                    simpleFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
+                else
+                    simpleFlows = obj.fmax*TNeeded;
+                end
+            else
+                TNeeded = mean(reshape([rooms.T_range],[2,7]))-T.';
+                for i =1:7
+                    if TNeeded(i) <0
+                        TNeeded(i)=0;
+                    end
+                end
+                if sum(TNeeded)>=4 
+                    simpleFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
+                else
+                    simpleFlows = obj.fmax*TNeeded/4;
+                end    
+            end
+        end
+        function advancedFlows = advancedHeatingFlows(obj,t,T)
+            rooms=obj.building.rooms;
+            TNeeded = mean(reshape([rooms.T_range],[2,7]))-T.'-2;
+            if t>=obj.tBack(1)+.0005
+                obj.tBack=circshift(obj.tBack,1);
+                obj.tBack(1)=t;
+                obj.intBack=circshift(obj.intBack,1,1);
+                obj.intBack(1,:)=TNeeded;
+            end
             for i =1:7
+                lastTemp=obj.intBack(2);
+                lastTime=obj.tBack(2);
+                if(t-lastTime)<1e-5 || (t-lastTime)<0
+                    dTdt=0;
+                else
+                    dTdt=(T(i)-lastTemp)/(t-lastTime);
+                end
+                integral = trapz(flip(obj.tBack),flip(obj.intBack(:,i)));
+                TNeeded(i)=1*TNeeded(i)+integral*4-dTdt/9e6;
                 if TNeeded(i) <0
                     TNeeded(i)=0;
                 end
             end
-            if sum(TNeeded)>=1
-                simpleFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
+            if sum(TNeeded)>=2
+                advancedFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
             else
-                simpleFlows = obj.fmax*TNeeded;
-            end
+                advancedFlows = obj.fmax*TNeeded/2;
+            end    
         end
-        function minFlows = minHeatingFlows(obj,T)
+        function minFlows = minHeatingFlows(obj,t,T)
             rooms=obj.building.rooms;
             Tranges = reshape([rooms.T_range],[2,7]);
             TNeeded = Tranges(1,:)-T.'+1;
@@ -74,10 +121,18 @@ classdef Heater < handle
                     TNeeded(i)=0;
                 end
             end
-            if sum(TNeeded)>=1
-                minFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;
+            if t>150&&t<275
+                if sum(TNeeded)>=1
+                    minFlows = obj.fmax*TNeeded/sum(TNeeded)*.3;     
+                else
+                    minFlows = obj.fmax*TNeeded*.3;
+                end
             else
-                minFlows = obj.fmax*TNeeded;
+                if sum(TNeeded)>=1
+                    minFlows = obj.fmax*TNeeded/sum(TNeeded)*.999;     
+                else
+                    minFlows = obj.fmax*TNeeded;
+                end
             end
         end
 %         function p = power(obj,heaterTemp,heaterFlow,t)
