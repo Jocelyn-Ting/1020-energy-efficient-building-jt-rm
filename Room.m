@@ -66,7 +66,7 @@ classdef Room < handle
         function dQdt_internal = getInternal(obj,t)
             if obj.ID == 7
                 dQdt_internal = 5000;
-            elseif (obj.ID == 3) && isWorkHours(t)%obj.building.realBuilding.getOccupancy(t)%
+            elseif (obj.ID == 3) && obj.building.realBuilding.getOccupancy(t)%isWorkHours(t)
                 dQdt_internal = 2000;
             else
                 dQdt_internal = 0;

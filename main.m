@@ -15,7 +15,7 @@ f = @(t,T) building.dTdt(t,T);
 % T0 = [295;295;295;295;295;295;295];
 T0 = [298;298;298;298;298;298;298]; %to test starting in summer
 ODEOPTS = odeset('MaxStep',0.1);
-[tRange,T] = ode15s(f,[160 180],T0,ODEOPTS);
+[tRange,T] = ode15s(f,[1 365],T0,ODEOPTS);
 % If you are running into difficulties with ode15s getting stuck, try
 % using, which uses a different solution algorithm, but it runs slower
 %[tRange,T] = ode23s(f,[1 10],T0,ODEOPTS);
@@ -43,7 +43,7 @@ disp(tRange)
 figure(1);
 subplot(5,1,1)
 plot(tRange,T)
-title('Layout 1 PID control')
+title('Layout 1 real occupancy')
 ylabel('T (K)')
 legend('Room 1','Room 2','Room 3','Room 4','Room 5','Room 6','Room 7')
 subplot(5,1,2)
@@ -83,3 +83,4 @@ for ii = 1:7
     plot(tRange,Tmax(ii)*ones(size(tRange)))
     legend(strcat('Temp room ', num2str(ii)), 'min', 'max')
 end
+save('layout1_realOccupancy_5.14.21','tRange','T')
